@@ -1,0 +1,1 @@
+-- F00: baseline migration (empty — schema managed by Flyway from V1 onward)
