@@ -28,7 +28,13 @@ public enum ErrorCode {
     // ===== F03: Category =====
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy danh mục"),
     CATEGORY_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "Slug danh mục đã tồn tại"),
-    CATEGORY_PARENT_INVALID(HttpStatus.BAD_REQUEST, "Danh mục cha không hợp lệ hoặc gây vòng lặp");
+    CATEGORY_PARENT_INVALID(HttpStatus.BAD_REQUEST, "Danh mục cha không hợp lệ hoặc gây vòng lặp"),
+
+    // ===== F04: Product =====
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"),
+    PRODUCT_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "Slug sản phẩm đã tồn tại"),
+    INVALID_PRICE(HttpStatus.BAD_REQUEST, "Giá bán không thể lớn hơn giá gốc"),
+    INVALID_STOCK(HttpStatus.BAD_REQUEST, "Số lượng tồn kho không hợp lệ");
 
 
     private final HttpStatus httpStatus;
