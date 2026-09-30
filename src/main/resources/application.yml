@@ -26,4 +26,9 @@ management:
       exposure:
         include: health,info
 
-# Các cấu hình app.* (jwt, cloudinary, vnpay...) sẽ được thêm ở từng tính năng tương ứng
+# Cấu hình JWT
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    access-token-expiration-ms: 900000 # 15 phút (ms)
+

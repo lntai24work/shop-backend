@@ -8,7 +8,7 @@ Mỗi tính năng: **tạo nhánh Git -> làm -> test tay -> merge/commit -> tic
 ## Tổng quan
 
 - [x] F00 Nền tảng
-- [ ] F01 Đăng ký / đăng nhập (JWT)
+- [x] F01 Đăng ký / đăng nhập (JWT)
 - [ ] F02 Refresh token, đăng xuất, /users/me
 - [ ] F03 Danh mục (Category)
 - [ ] F04 Sản phẩm: CRUD, lọc, tìm kiếm
