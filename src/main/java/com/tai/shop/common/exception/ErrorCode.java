@@ -17,11 +17,13 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "Bạn không có quyền thực hiện thao tác này"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Bạn cần đăng nhập để thực hiện thao tác này"),
 
-    // ===== F01: Auth & User =====
+    // ===== F01, F02: Auth & User =====
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "Email đã được sử dụng"),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không chính xác"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"),
-    USER_DISABLED(HttpStatus.FORBIDDEN, "Tài khoản đã bị khóa hoặc chưa kích hoạt");
+    USER_DISABLED(HttpStatus.FORBIDDEN, "Tài khoản đã bị khóa hoặc chưa kích hoạt"),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh token đã hết hạn"),
+    REFRESH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "Refresh token không hợp lệ hoặc đã bị thu hồi");
 
 
     private final HttpStatus httpStatus;

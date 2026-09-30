@@ -1,8 +1,10 @@
 package com.tai.shop.auth;
 
 import com.tai.shop.auth.dto.LoginRequest;
+import com.tai.shop.auth.dto.RefreshTokenRequest;
 import com.tai.shop.auth.dto.RegisterRequest;
 import com.tai.shop.support.AbstractIntegrationTest;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,11 +16,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tools.jackson.databind.ObjectMapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +43,7 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/auth/register: should return 201 Created and JWT token")
+    @DisplayName("POST /api/v1/auth/register: should return 201 Created, JWT token and HttpOnly cookie")
     void register_validUser_shouldReturn201() throws Exception {
         RegisterRequest request = new RegisterRequest(
                 "newuser@shop.com",
@@ -54,13 +58,14 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.data.accessToken", notNullValue()))
-                .andExpect(jsonPath("$.data.user.email", is("newuser@shop.com")));
+                .andExpect(jsonPath("$.data.user.email", is("newuser@shop.com")))
+                .andExpect(cookie().exists("refreshToken"))
+                .andExpect(cookie().httpOnly("refreshToken", true));
     }
 
     @Test
     @DisplayName("POST /api/v1/auth/register: should return 409 Conflict when email exists")
     void register_duplicateEmail_shouldReturn409() throws Exception {
-        // admin@shop.com is seeded in V1 migration
         RegisterRequest request = new RegisterRequest(
                 "admin@shop.com",
                 "password123",
@@ -80,8 +85,8 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
     void register_invalidData_shouldReturn400() throws Exception {
         RegisterRequest request = new RegisterRequest(
                 "invalid-email",
-                "123", // too short (< 6 chars)
-                "",    // blank
+                "123",
+                "",
                 "0912345678"
         );
 
@@ -93,7 +98,7 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/auth/login: should return 200 OK for admin seeded user")
+    @DisplayName("POST /api/v1/auth/login: should return 200 OK and set refreshToken cookie")
     void login_adminUser_shouldReturn200() throws Exception {
         LoginRequest request = new LoginRequest("admin@shop.com", "admin123");
 
@@ -103,7 +108,9 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.data.accessToken", notNullValue()))
-                .andExpect(jsonPath("$.data.user.email", is("admin@shop.com")));
+                .andExpect(jsonPath("$.data.user.email", is("admin@shop.com")))
+                .andExpect(cookie().exists("refreshToken"))
+                .andExpect(cookie().httpOnly("refreshToken", true));
     }
 
     @Test
@@ -119,6 +126,92 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @DisplayName("POST /api/v1/auth/refresh: should rotate token and return new access token via cookie")
+    void refresh_validCookie_shouldRotateAndReturnNewToken() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("admin@shop.com", "admin123");
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Cookie refreshCookie = loginResult.getResponse().getCookie("refreshToken");
+        assertThat(refreshCookie).isNotNull();
+
+        MvcResult refreshResult = mockMvc.perform(post("/api/v1/auth/refresh")
+                        .cookie(refreshCookie))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.accessToken", notNullValue()))
+                .andExpect(cookie().exists("refreshToken"))
+                .andReturn();
+
+        // Thử dùng lại token cũ -> phải bị từ chối 401 do reuse detection
+        mockMvc.perform(post("/api/v1/auth/refresh")
+                        .cookie(refreshCookie))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success", is(false)));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/auth/logout: should clear cookie and revoke refresh token")
+    void logout_validCookie_shouldClearCookieAndRevokeToken() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("admin@shop.com", "admin123");
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Cookie refreshCookie = loginResult.getResponse().getCookie("refreshToken");
+        assertThat(refreshCookie).isNotNull();
+
+        // Logout
+        mockMvc.perform(post("/api/v1/auth/logout")
+                        .cookie(refreshCookie))
+                .andExpect(status().isOk())
+                .andExpect(cookie().maxAge("refreshToken", 0));
+
+        // Sau khi logout, refresh bằng cookie cũ phải thất bại
+        mockMvc.perform(post("/api/v1/auth/refresh")
+                        .cookie(refreshCookie))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success", is(false)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/users/me: should return user profile with valid access token")
+    void getMe_withValidToken_shouldReturnProfile() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("admin@shop.com", "admin123");
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = loginResult.getResponse().getContentAsString();
+        String token = com.jayway.jsonpath.JsonPath.read(responseBody, "$.data.accessToken");
+
+        mockMvc.perform(get("/api/v1/users/me")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.email", is("admin@shop.com")))
+                .andExpect(jsonPath("$.data.fullName", is("Admin User")));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/users/me: should return 401 without token")
+    void getMe_withoutToken_shouldReturn401() throws Exception {
+        mockMvc.perform(get("/api/v1/users/me"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success", is(false)));
+    }
+
+    @Test
     @DisplayName("GET /api/v1/admin/ping: should return 401 Unauthorized without token")
     void adminPing_withoutToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/v1/admin/ping"))
@@ -129,7 +222,6 @@ class AuthIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("GET /api/v1/admin/ping: should return 403 Forbidden with USER token")
     void adminPing_withUserToken_shouldReturn403() throws Exception {
-        // Register a regular user to get token
         RegisterRequest registerRequest = new RegisterRequest(
                 "regular@shop.com",
                 "password123",

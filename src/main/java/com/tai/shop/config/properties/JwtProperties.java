@@ -13,4 +13,5 @@ public class JwtProperties {
 
     private String secret = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
     private long accessTokenExpirationMs = 900000; // 15 phút
+    private long refreshTokenExpirationMs = 604800000; // 7 ngày
 }
