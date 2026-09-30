@@ -23,7 +23,12 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"),
     USER_DISABLED(HttpStatus.FORBIDDEN, "Tài khoản đã bị khóa hoặc chưa kích hoạt"),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh token đã hết hạn"),
-    REFRESH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "Refresh token không hợp lệ hoặc đã bị thu hồi");
+    REFRESH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "Refresh token không hợp lệ hoặc đã bị thu hồi"),
+
+    // ===== F03: Category =====
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy danh mục"),
+    CATEGORY_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "Slug danh mục đã tồn tại"),
+    CATEGORY_PARENT_INVALID(HttpStatus.BAD_REQUEST, "Danh mục cha không hợp lệ hoặc gây vòng lặp");
 
 
     private final HttpStatus httpStatus;

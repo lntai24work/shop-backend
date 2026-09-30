@@ -10,7 +10,7 @@ Mỗi tính năng: **tạo nhánh Git -> làm -> test tay -> merge/commit -> tic
 - [x] F00 Nền tảng
 - [x] F01 Đăng ký / đăng nhập (JWT)
 - [x] F02 Refresh token, đăng xuất, /users/me
-- [ ] F03 Danh mục (Category)
+- [x] F03 Danh mục (Category)
 - [ ] F04 Sản phẩm: CRUD, lọc, tìm kiếm
 - [ ] F05 Upload ảnh sản phẩm (Cloudinary)
 - [ ] F06 Hồ sơ người dùng, địa chỉ, avatar
