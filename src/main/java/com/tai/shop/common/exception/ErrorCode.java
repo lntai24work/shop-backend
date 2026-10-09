@@ -41,7 +41,13 @@ public enum ErrorCode {
     FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "Dung lượng file vượt quá giới hạn cho phép (tối đa 5MB)"),
     INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "Định dạng file không hợp lệ (chỉ chấp nhận JPEG, PNG, WEBP)"),
     IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Tải ảnh lên hệ thống lưu trữ thất bại"),
-    PRODUCT_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy ảnh sản phẩm");
+    PRODUCT_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy ảnh sản phẩm"),
+
+    // ===== F06: User Profile & Address =====
+    ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy địa chỉ giao hàng"),
+    OLD_PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, "Mật khẩu cũ không chính xác"),
+    PASSWORDS_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "Mật khẩu mới và mật khẩu xác nhận không khớp"),
+    NEW_PASSWORD_SAME_AS_OLD(HttpStatus.BAD_REQUEST, "Mật khẩu mới không được trùng với mật khẩu cũ");
 
 
     private final HttpStatus httpStatus;

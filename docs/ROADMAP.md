@@ -13,7 +13,7 @@ Mỗi tính năng: **tạo nhánh Git -> làm -> test tay -> merge/commit -> tic
 - [x] F03 Danh mục (Category)
 - [x] F04 Sản phẩm: CRUD, lọc, tìm kiếm
 - [x] F05 Upload ảnh sản phẩm (Cloudinary)
-- [ ] F06 Hồ sơ người dùng, địa chỉ, avatar
+- [x] F06 Hồ sơ người dùng, địa chỉ, avatar
 - [ ] F07 Giỏ hàng
 - [ ] F08 Đặt hàng COD + trừ kho an toàn
 - [ ] F09 Thanh toán VNPay (sandbox) + IPNf
