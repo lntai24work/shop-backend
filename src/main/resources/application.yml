@@ -17,6 +17,11 @@ spring:
     enabled: true
     locations: classpath:db/migration
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+
 server:
   port: 8080
 
@@ -32,5 +37,11 @@ app:
     secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
     access-token-expiration-ms: 900000 # 15 phút (ms)
     refresh-token-expiration-ms: 604800000 # 7 ngày (ms)
+
+# Cấu hình Cloudinary (F05)
+cloudinary:
+  cloud-name: ${CLOUDINARY_NAME:}
+  api-key: ${CLOUDINARY_KEY:}
+  api-secret: ${CLOUDINARY_SECRET:}
 
 

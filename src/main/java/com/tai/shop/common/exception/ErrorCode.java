@@ -34,7 +34,14 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"),
     PRODUCT_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "Slug sản phẩm đã tồn tại"),
     INVALID_PRICE(HttpStatus.BAD_REQUEST, "Giá bán không thể lớn hơn giá gốc"),
-    INVALID_STOCK(HttpStatus.BAD_REQUEST, "Số lượng tồn kho không hợp lệ");
+    INVALID_STOCK(HttpStatus.BAD_REQUEST, "Số lượng tồn kho không hợp lệ"),
+
+    // ===== F05: Product Image & Storage =====
+    FILE_EMPTY(HttpStatus.BAD_REQUEST, "File tải lên không được để trống"),
+    FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "Dung lượng file vượt quá giới hạn cho phép (tối đa 5MB)"),
+    INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "Định dạng file không hợp lệ (chỉ chấp nhận JPEG, PNG, WEBP)"),
+    IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Tải ảnh lên hệ thống lưu trữ thất bại"),
+    PRODUCT_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy ảnh sản phẩm");
 
 
     private final HttpStatus httpStatus;

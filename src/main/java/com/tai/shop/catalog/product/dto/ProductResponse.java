@@ -1,10 +1,12 @@
 package com.tai.shop.catalog.product.dto;
 
 import com.tai.shop.catalog.product.ProductStatus;
+import com.tai.shop.catalog.product.image.dto.ProductImageResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Schema(description = "Thông tin phản hồi sản phẩm")
 public record ProductResponse(
@@ -47,9 +49,21 @@ public record ProductResponse(
         @Schema(description = "Trạng thái", example = "ACTIVE")
         ProductStatus status,
 
+        @Schema(description = "Danh sách album ảnh sản phẩm")
+        List<ProductImageResponse> images,
+
         @Schema(description = "Thời gian tạo")
         Instant createdAt,
 
         @Schema(description = "Thời gian cập nhật gần nhất")
         Instant updatedAt
-) {}
+) {
+    public ProductResponse(
+            Long id, Long categoryId, String categoryName, String name, String slug,
+            String shortDescription, String description, BigDecimal price, BigDecimal originalPrice,
+            Integer stock, Integer soldCount, String thumbnailUrl, ProductStatus status,
+            Instant createdAt, Instant updatedAt) {
+        this(id, categoryId, categoryName, name, slug, shortDescription, description, price, originalPrice,
+                stock, soldCount, thumbnailUrl, status, List.of(), createdAt, updatedAt);
+    }
+}

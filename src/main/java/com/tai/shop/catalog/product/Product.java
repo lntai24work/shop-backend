@@ -1,7 +1,9 @@
 package com.tai.shop.catalog.product;
 
 import com.tai.shop.catalog.category.Category;
+import com.tai.shop.catalog.product.image.ProductImage;
 import com.tai.shop.common.base.SoftDeletableEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.Getter;
@@ -16,6 +20,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -62,6 +68,10 @@ public class Product extends SoftDeletableEntity {
     @Version
     @Column(name = "version", nullable = false)
     private Long version = 0L;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("displayOrder ASC")
+    private List<ProductImage> images = new ArrayList<>();
 
     public Product(Category category, String name, String slug, String shortDescription,
                    String description, BigDecimal price, BigDecimal originalPrice,

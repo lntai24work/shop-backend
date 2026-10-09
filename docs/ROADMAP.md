@@ -12,11 +12,11 @@ Mỗi tính năng: **tạo nhánh Git -> làm -> test tay -> merge/commit -> tic
 - [x] F02 Refresh token, đăng xuất, /users/me
 - [x] F03 Danh mục (Category)
 - [x] F04 Sản phẩm: CRUD, lọc, tìm kiếm
-- [ ] F05 Upload ảnh sản phẩm (Cloudinary)
+- [x] F05 Upload ảnh sản phẩm (Cloudinary)
 - [ ] F06 Hồ sơ người dùng, địa chỉ, avatar
 - [ ] F07 Giỏ hàng
 - [ ] F08 Đặt hàng COD + trừ kho an toàn
-- [ ] F09 Thanh toán VNPay (sandbox) + IPN
+- [ ] F09 Thanh toán VNPay (sandbox) + IPNf
 - [ ] F10 Job hủy đơn hết hạn, hoàn kho
 - [ ] F11 Email bất đồng bộ (sự kiện đơn hàng)
 - [ ] F12 Mã giảm giá
