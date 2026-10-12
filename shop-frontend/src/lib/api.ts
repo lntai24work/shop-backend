@@ -7,6 +7,8 @@ import type {
   UserResponse,
   UpdateProfileRequest,
   ChangePasswordRequest,
+  UserFilterParams,
+  AdminCreateUserRequest,
   CategoryResponse,
   ProductResponse,
   ProductFilterRequest,
@@ -140,4 +142,37 @@ export const productApi = {
 
   getBySlug: (slug: string) =>
     apiFetch<ProductResponse>(`/api/v1/products/${slug}`),
+};
+
+// ─── Admin Users ──────────────────────────────────────────────────────────────
+export const adminUserApi = {
+  list: (params: UserFilterParams = {}) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== undefined && v !== "" && v !== "ALL") query.set(k, String(v));
+    });
+    return apiFetch<PageResponse<UserResponse>>(
+      `/api/v1/admin/users?${query.toString()}`
+    );
+  },
+
+  getById: (id: number) => apiFetch<UserResponse>(`/api/v1/admin/users/${id}`),
+
+  updateStatus: (id: number, status: "ACTIVE" | "BLOCKED") =>
+    apiFetch<UserResponse>(`/api/v1/admin/users/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }),
+
+  updateRoles: (id: number, roles: string[]) =>
+    apiFetch<UserResponse>(`/api/v1/admin/users/${id}/roles`, {
+      method: "PATCH",
+      body: JSON.stringify({ roles }),
+    }),
+
+  create: (body: AdminCreateUserRequest) =>
+    apiFetch<UserResponse>("/api/v1/admin/users", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
 };

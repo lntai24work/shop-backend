@@ -66,6 +66,23 @@ export interface ChangePasswordRequest {
   confirmPassword: string;
 }
 
+export interface UserFilterParams {
+  keyword?: string;
+  role?: string;
+  status?: string;
+  page?: number;
+  size?: number;
+  sort?: string;
+}
+
+export interface AdminCreateUserRequest {
+  email: string;
+  password: string;
+  fullName: string;
+  phone?: string;
+  roles?: string[];
+}
+
 // ========================
 // Category
 // ========================
