@@ -13,6 +13,8 @@ import type {
   CategoryRequest,
   ProductResponse,
   ProductFilterRequest,
+  AddressResponse,
+  AddressRequest,
 } from "@/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
@@ -122,6 +124,31 @@ export const userApi = {
       body: formData,
     });
   },
+};
+
+// ─── Address ──────────────────────────────────────────────────────────────────
+export const addressApi = {
+  getAll: () => apiFetch<AddressResponse[]>("/api/v1/users/me/addresses"),
+  getById: (id: number) =>
+    apiFetch<AddressResponse>(`/api/v1/users/me/addresses/${id}`),
+  create: (body: AddressRequest) =>
+    apiFetch<AddressResponse>("/api/v1/users/me/addresses", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+  update: (id: number, body: AddressRequest) =>
+    apiFetch<AddressResponse>(`/api/v1/users/me/addresses/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+  setDefault: (id: number) =>
+    apiFetch<AddressResponse>(`/api/v1/users/me/addresses/${id}/default`, {
+      method: "PATCH",
+    }),
+  delete: (id: number) =>
+    apiFetch<void>(`/api/v1/users/me/addresses/${id}`, {
+      method: "DELETE",
+    }),
 };
 
 // ─── Category ─────────────────────────────────────────────────────────────────

@@ -84,6 +84,32 @@ export interface AdminCreateUserRequest {
 }
 
 // ========================
+// Address
+// ========================
+export interface AddressResponse {
+  id: number;
+  recipientName: string;
+  phone: string;
+  province: string;
+  district: string;
+  ward: string;
+  detailAddress: string;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface AddressRequest {
+  recipientName: string;
+  phone: string;
+  province: string;
+  district: string;
+  ward: string;
+  detailAddress: string;
+  isDefault?: boolean;
+}
+
+// ========================
 // Category
 // ========================
 export interface CategoryResponse {
