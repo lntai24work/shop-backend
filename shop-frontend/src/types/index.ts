@@ -92,8 +92,22 @@ export interface CategoryResponse {
   slug: string;
   description?: string;
   imageUrl?: string;
+  parentId?: number | null;
+  parentName?: string | null;
+  status?: "ACTIVE" | "INACTIVE";
+  displayOrder?: number;
   productCount?: number;
   children?: CategoryResponse[];
+}
+
+export interface CategoryRequest {
+  name: string;
+  slug?: string;
+  description?: string;
+  imageUrl?: string;
+  parentId?: number | null;
+  displayOrder?: number;
+  status?: "ACTIVE" | "INACTIVE";
 }
 
 // ========================

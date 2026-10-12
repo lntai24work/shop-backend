@@ -10,6 +10,7 @@ import type {
   UserFilterParams,
   AdminCreateUserRequest,
   CategoryResponse,
+  CategoryRequest,
   ProductResponse,
   ProductFilterRequest,
 } from "@/types";
@@ -126,6 +127,28 @@ export const userApi = {
 // ─── Category ─────────────────────────────────────────────────────────────────
 export const categoryApi = {
   getAll: () => apiFetch<CategoryResponse[]>("/api/v1/categories"),
+  getBySlug: (slug: string) =>
+    apiFetch<CategoryResponse>(`/api/v1/categories/${slug}`),
+};
+
+export const adminCategoryApi = {
+  getAll: () => apiFetch<CategoryResponse[]>("/api/v1/admin/categories"),
+  getById: (id: number) =>
+    apiFetch<CategoryResponse>(`/api/v1/admin/categories/${id}`),
+  create: (body: CategoryRequest) =>
+    apiFetch<CategoryResponse>("/api/v1/admin/categories", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+  update: (id: number, body: CategoryRequest) =>
+    apiFetch<CategoryResponse>(`/api/v1/admin/categories/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+  delete: (id: number) =>
+    apiFetch<void>(`/api/v1/admin/categories/${id}`, {
+      method: "DELETE",
+    }),
 };
 
 // ─── Product ──────────────────────────────────────────────────────────────────
