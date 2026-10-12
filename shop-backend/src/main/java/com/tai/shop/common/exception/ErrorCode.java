@@ -47,7 +47,12 @@ public enum ErrorCode {
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy địa chỉ giao hàng"),
     OLD_PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, "Mật khẩu cũ không chính xác"),
     PASSWORDS_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "Mật khẩu mới và mật khẩu xác nhận không khớp"),
-    NEW_PASSWORD_SAME_AS_OLD(HttpStatus.BAD_REQUEST, "Mật khẩu mới không được trùng với mật khẩu cũ");
+    NEW_PASSWORD_SAME_AS_OLD(HttpStatus.BAD_REQUEST, "Mật khẩu mới không được trùng với mật khẩu cũ"),
+
+    // ===== F14: Admin User Management =====
+    ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy vai trò người dùng"),
+    CANNOT_BLOCK_SELF(HttpStatus.BAD_REQUEST, "Bạn không thể tự khóa tài khoản của chính mình"),
+    CANNOT_DEMOTE_SELF(HttpStatus.BAD_REQUEST, "Bạn không thể tự tước quyền Quản trị viên của chính mình");
 
 
     private final HttpStatus httpStatus;
