@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Zap, Mail, Lock } from "lucide-react";
-import { authApi, setTokens } from "@/lib/api";
+import { authApi, setTokens, setStoredUser, userApi } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,7 +21,27 @@ export default function LoginPage() {
     try {
       const res = await authApi.login({ email, password });
       setTokens(res.data.accessToken, res.data.refreshToken);
-      router.push("/");
+
+      let currentUser = res.data.user;
+      if (!currentUser) {
+        try {
+          const meRes = await userApi.getMe();
+          currentUser = meRes.data;
+        } catch {
+          // ignore error
+        }
+      }
+
+      if (currentUser) {
+        setStoredUser(currentUser);
+      }
+
+      const hasAdminRole = Boolean(currentUser?.roles?.includes("ROLE_ADMIN"));
+      if (hasAdminRole) {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
       router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Đăng nhập thất bại");

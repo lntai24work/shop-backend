@@ -12,18 +12,44 @@ import type {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
-// ─── Token helpers ────────────────────────────────────────────────────────────
+// ─── Token & User helpers ────────────────────────────────────────────────────────────
 export const getAccessToken = () =>
   typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
 
-export const setTokens = (accessToken: string, refreshToken: string) => {
+export const setTokens = (accessToken: string, refreshToken?: string) => {
   localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+  if (refreshToken) {
+    localStorage.setItem("refreshToken", refreshToken);
+  }
+};
+
+export const getStoredUser = (): UserResponse | null => {
+  if (typeof window === "undefined") return null;
+  const user = localStorage.getItem("user");
+  try {
+    return user ? JSON.parse(user) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const setStoredUser = (user: UserResponse) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+};
+
+export const isAdmin = (): boolean => {
+  const user = getStoredUser();
+  return Boolean(user?.roles?.includes("ROLE_ADMIN"));
 };
 
 export const clearTokens = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+  }
 };
 
 // ─── Core fetch ───────────────────────────────────────────────────────────────

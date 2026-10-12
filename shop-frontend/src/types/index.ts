@@ -33,8 +33,10 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
   tokenType: string;
+  expiresIn?: number;
+  user?: UserResponse;
 }
 
 // ========================
@@ -43,13 +45,14 @@ export interface AuthResponse {
 export interface UserResponse {
   id: number;
   email: string;
-  firstName: string;
-  lastName: string;
+  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
   avatarUrl?: string;
-  status: string;
+  status?: string;
   roles: string[];
-  createdAt: string;
+  createdAt?: string;
 }
 
 // ========================

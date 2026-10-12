@@ -89,15 +89,23 @@ export default function Header() {
             {/* Auth */}
             {user ? (
               <div className="flex items-center gap-2">
+                {user.roles?.includes("ROLE_ADMIN") && (
+                  <Link
+                    href="/admin"
+                    className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 transition-all hidden sm:inline-flex items-center gap-1"
+                  >
+                    <span>Quản trị</span>
+                  </Link>
+                )}
                 <Link
                   href="/profile"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all"
+                  className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-white/5 transition-colors"
                 >
                   <div className="w-7 h-7 brand-gradient rounded-full flex items-center justify-center text-xs font-bold text-white">
-                    {user.firstName?.[0]?.toUpperCase() ?? "U"}
+                    {(user.fullName?.[0] || user.firstName?.[0] || "A").toUpperCase()}
                   </div>
                   <span className="text-sm text-foreground hidden sm:block">
-                    {user.firstName}
+                    {user.fullName || user.firstName || "Tài khoản"}
                   </span>
                 </Link>
                 <button
