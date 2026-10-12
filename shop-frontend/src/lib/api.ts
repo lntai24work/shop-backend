@@ -5,6 +5,8 @@ import type {
   RegisterRequest,
   AuthResponse,
   UserResponse,
+  UpdateProfileRequest,
+  ChangePasswordRequest,
   CategoryResponse,
   ProductResponse,
   ProductFilterRequest,
@@ -58,10 +60,12 @@ async function apiFetch<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   const token = getAccessToken();
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
+  const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
+
+  const headers: Record<string, string> = {
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
@@ -94,6 +98,27 @@ export const authApi = {
 // ─── User ─────────────────────────────────────────────────────────────────────
 export const userApi = {
   getMe: () => apiFetch<UserResponse>("/api/v1/users/me"),
+
+  updateProfile: (body: UpdateProfileRequest) =>
+    apiFetch<UserResponse>("/api/v1/users/me", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  changePassword: (body: ChangePasswordRequest) =>
+    apiFetch<void>("/api/v1/users/me/password", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  updateAvatar: (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiFetch<UserResponse>("/api/v1/users/me/avatar", {
+      method: "POST",
+      body: formData,
+    });
+  },
 };
 
 // ─── Category ─────────────────────────────────────────────────────────────────

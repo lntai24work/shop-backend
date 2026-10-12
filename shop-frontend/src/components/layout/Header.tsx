@@ -101,10 +101,18 @@ export default function Header() {
                   href="/profile"
                   className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-white/5 transition-colors"
                 >
-                  <div className="w-7 h-7 brand-gradient rounded-full flex items-center justify-center text-xs font-bold text-white">
-                    {(user.fullName?.[0] || user.firstName?.[0] || "A").toUpperCase()}
-                  </div>
-                  <span className="text-sm text-foreground hidden sm:block">
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.fullName || "Avatar"}
+                      className="w-7 h-7 rounded-full object-cover border border-primary/30"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 brand-gradient rounded-full flex items-center justify-center text-xs font-bold text-white">
+                      {(user.fullName?.[0] || user.firstName?.[0] || "A").toUpperCase()}
+                    </div>
+                  )}
+                  <span className="text-sm text-foreground hidden sm:block max-w-[140px] truncate">
                     {user.fullName || user.firstName || "Tài khoản"}
                   </span>
                 </Link>

@@ -45,7 +45,7 @@ public class CloudinaryStorageService implements StorageService {
 
             log.info("Upload ảnh thành công lên Cloudinary. Public ID: {}, URL: {}", publicId, secureUrl);
             return new UploadResult(secureUrl, publicId);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Lỗi khi upload ảnh lên Cloudinary: {}", e.getMessage(), e);
             throw new AppException(ErrorCode.IMAGE_UPLOAD_FAILED);
         }
@@ -61,7 +61,7 @@ public class CloudinaryStorageService implements StorageService {
             log.info("Bắt đầu xóa ảnh trên Cloudinary với publicId: {}", publicId);
             Map<?, ?> result = cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", "image"));
             log.info("Kết quả xóa ảnh trên Cloudinary: {}", result);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Lỗi khi xóa ảnh trên Cloudinary với publicId {}: {}", publicId, e.getMessage(), e);
             // Không ngắt luồng nếu xóa cloud lỗi, chỉ log lại để tránh block transaction DB
         }

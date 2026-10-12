@@ -27,8 +27,8 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
+  phone?: string;
 }
 
 export interface AuthResponse {
@@ -55,6 +55,17 @@ export interface UserResponse {
   createdAt?: string;
 }
 
+export interface UpdateProfileRequest {
+  fullName: string;
+  phone?: string | null;
+}
+
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 // ========================
 // Category
 // ========================
@@ -65,6 +76,7 @@ export interface CategoryResponse {
   description?: string;
   imageUrl?: string;
   productCount?: number;
+  children?: CategoryResponse[];
 }
 
 // ========================
@@ -76,7 +88,9 @@ export interface ProductResponse {
   slug: string;
   description?: string;
   price: number;
+  originalPrice?: number;
   stock: number;
+  soldCount?: number;
   status: string;
   categoryId: number;
   categoryName: string;
