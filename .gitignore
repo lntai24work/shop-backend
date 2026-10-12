@@ -1,8 +1,36 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ========================
+# Root mono-repo .gitignore
+# ========================
+
+### Secrets & environment ###
+.env
+*.env
+!.env.example
+
+### Agent ###
+.agent/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+# ========================
+# Backend (shop-backend/)
+# ========================
+shop-backend/HELP.md
+shop-backend/target/
+shop-backend/.mvn/wrapper/maven-wrapper.jar
+!shop-backend/**/src/main/**/target/
+!shop-backend/**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
 
 ### STS ###
 .apt_generated
@@ -13,12 +41,6 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -26,16 +48,13 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+!shop-backend/**/src/main/**/build/
+!shop-backend/**/src/test/**/build/
 
-### VS Code ###
-.vscode/
-
-### Secrets & environment ###
-.env
-*.env
-!.env.example
-
-### Agent ###
-.agent/
+# ========================
+# Frontend (shop-frontend/)
+# ========================
+shop-frontend/node_modules/
+shop-frontend/.next/
+shop-frontend/out/
+shop-frontend/.env*.local
